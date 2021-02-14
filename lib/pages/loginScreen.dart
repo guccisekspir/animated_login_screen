@@ -43,6 +43,14 @@ class _LoginScreenState extends State<LoginScreen> {
               alignment: AlignmentDirectional.center,
               children: [
                 Positioned(
+                  top: _sizeHelper.height*0.02,
+                  child: Container(
+                    width: _sizeHelper.width*0.32,
+                    height: _sizeHelper.height*0.32 ,
+                    child: Image.asset("assets/logod.png"),
+                  ),
+                ),
+                Positioned(
                   top: _sizeHelper.height*0.35,
 
                   child: Column(
@@ -60,6 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         context: context,
                         focusNode:_passFocusNode,
                       ),
+                      SizedBox(height: 30,),
+                      submitButton(isLogin: true,height: _sizeHelper.height)
                     ],
                   ),),
 

@@ -23,6 +23,7 @@ Widget loginEntryField(
                 enabledBorder:OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).primaryColor)) ,
                 border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).primaryColor))
               ),
+              style: TextStyle(color: Colors.pink),
               focusNode: focusNode,
               controller: textEditingController,
               keyboardType:
@@ -32,5 +33,49 @@ Widget loginEntryField(
     ),
 
 
+  );
+}
+
+Widget submitButton(
+    {
+      bool isLogin,
+      double height}) {
+  return Padding(
+    padding: const EdgeInsets.all(10),
+    child: GestureDetector(
+      onTap: () {
+
+        debugPrint("validate");
+      },
+      child: Container(
+        height: height*0.075,
+        width: height*0.4,
+
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(blurRadius: 1.0,spreadRadius:1.0,offset: Offset(1,4))
+          ],
+          gradient: LinearGradient(
+
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+            colors: [
+              Colors.black45,
+              Colors.black26
+            ]
+          ),
+          borderRadius: BorderRadius.circular(15)
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              isLogin?"Log In":"Sign Up",
+              style: TextStyle(fontSize: height*0.04,color: Colors.pink),
+            ),
+          ),
+        ),
+      ),
+    ),
   );
 }
