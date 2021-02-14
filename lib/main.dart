@@ -1,7 +1,9 @@
+import 'package:animated_login_screen/helpers/sizeHelper.dart';
 import 'package:animated_login_screen/pages/loginScreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+
   runApp(MyApp());
 }
 
