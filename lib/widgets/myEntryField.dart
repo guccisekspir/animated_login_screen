@@ -48,8 +48,8 @@ Widget submitButton(
         debugPrint("validate");
       },
       child: Container(
-        height: height*0.075,
-        width: height*0.4,
+        height: height*0.068,
+        width: height*0.3,
 
         decoration: BoxDecoration(
           boxShadow: [
@@ -60,8 +60,8 @@ Widget submitButton(
               begin: Alignment.bottomLeft,
               end: Alignment.topRight,
             colors: [
-              Colors.black45,
-              Colors.black26
+              Colors.deepPurpleAccent,
+              Colors.deepPurple.shade800
             ]
           ),
           borderRadius: BorderRadius.circular(15)

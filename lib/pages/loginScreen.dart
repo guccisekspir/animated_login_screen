@@ -38,42 +38,68 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return isMounted
         ? Scaffold(
-            backgroundColor: Theme.of(context).accentColor,
-            body: Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
-                Positioned(
-                  top: _sizeHelper.height*0.02,
-                  child: Container(
-                    width: _sizeHelper.width*0.32,
-                    height: _sizeHelper.height*0.32 ,
-                    child: Image.asset("assets/logod.png"),
+            body: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Theme.of(context).accentColor,
+                    Colors.deepPurple
+                  ]
+                )
+              ),
+              child: Stack(
+                alignment: AlignmentDirectional.center,
+                children: [
+                  Positioned(
+                    top: _sizeHelper.height*0.02,
+                    child: Container(
+                      width: _sizeHelper.width*0.32,
+                      height: _sizeHelper.height*0.32 ,
+                      child: Image.asset("assets/logod.png"),
+                    ),
                   ),
-                ),
-                Positioned(
-                  top: _sizeHelper.height*0.35,
+                  Positioned(
+                    top: _sizeHelper.height*0.35,
 
-                  child: Column(
-                    children: [
-                      loginEntryField(
-                        isPass: false,
-                        textEditingController: _mailController,
-                        context: context,
-                        focusNode: _mailFocusNode,
-                      ),
-                      SizedBox(height: 30,),
-                      loginEntryField(
-                        isPass: true,
-                        textEditingController: _passController,
-                        context: context,
-                        focusNode:_passFocusNode,
-                      ),
-                      SizedBox(height: 30,),
-                      submitButton(isLogin: true,height: _sizeHelper.height)
-                    ],
-                  ),),
+                    child: Column(
+                      children: [
+                        loginEntryField(
+                          isPass: false,
+                          textEditingController: _mailController,
+                          context: context,
+                          focusNode: _mailFocusNode,
+                        ),
+                        SizedBox(height: 30,),
+                        loginEntryField(
+                          isPass: true,
+                          textEditingController: _passController,
+                          context: context,
+                          focusNode:_passFocusNode,
+                        ),
+                        SizedBox(height: 30,),
+                        submitButton(isLogin: true,height: _sizeHelper.height)
+                      ],
+                    ),),
+                 Positioned(
+                   bottom: 25,
+                   child: Padding(
+                     padding: const EdgeInsets.symmetric(horizontal: 20),
+                     child: Container(
+                       width: _sizeHelper.width,
 
-              ],
+                       child: Text(
+                         "Don't have an account? Come Join Us",
+                         textAlign: TextAlign.center,
+                         style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),
+                       ),
+                     ),
+                   ),
+                 )
+
+                ],
+              ),
             ),
           )
         : Container(
