@@ -9,6 +9,8 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,9 +23,24 @@ class MyApp extends StatelessWidget {
         
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LoginScreen(),
+      home: LoginSignScreens()
     );
   }
 }
+
+class LoginSignScreens extends StatefulWidget {
+  @override
+  _LoginSignScreensState createState() => _LoginSignScreensState();
+}
+
+class _LoginSignScreensState extends State<LoginSignScreens> {
+  bool isLogin=true;
+
+  @override
+  Widget build(BuildContext context) {
+    return  LoginScreen();
+  }
+}
+
 
 

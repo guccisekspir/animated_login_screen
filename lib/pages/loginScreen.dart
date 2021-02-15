@@ -7,7 +7,7 @@ class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStateMixin {
   bool isMounted = false;
 
   SizeHelper _sizeHelper;
@@ -17,21 +17,43 @@ class _LoginScreenState extends State<LoginScreen> {
   FocusNode _mailFocusNode;
   FocusNode _passFocusNode;
 
+  Animation animation;
+  AnimationController animationController;
+
+  GlobalKey _keyMail=GlobalKey();
+  GlobalKey _keyPass=GlobalKey();
+
   @override
   void initState() {
+    animationController=AnimationController(vsync: this,duration: Duration(milliseconds: 300));
+    animation=CurvedAnimation(
+      curve: Curves.easeIn,
+      parent: animationController
+    );
+
     _mailController=TextEditingController(text: "");
     _passController=TextEditingController(text: "");
     _mailFocusNode=FocusNode();
     _passFocusNode=FocusNode();
     // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
       _sizeHelper = SizeHelper(fetchedContext: context);
+
       setState(() {
         isMounted = true;
       });
+      _afterLayout();
     });
 
     super.initState();
+  }
+
+  _afterLayout()async{
+
+    Future.delayed(Duration(milliseconds: 4000)).then((value) => _getPositions());
+
+
   }
 
   @override
@@ -53,11 +75,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 alignment: AlignmentDirectional.center,
                 children: [
                   Positioned(
-                    top: _sizeHelper.height*0.02,
-                    child: Container(
-                      width: _sizeHelper.width*0.32,
-                      height: _sizeHelper.height*0.32 ,
-                      child: Image.asset("assets/logod.png"),
+                    top: _sizeHelper.height*0.02+50,
+                    child: AnimatedBuilder(
+
+                      animation: animation,
+                      builder: (BuildContext context,Widget child){
+                        debugPrint("sdasdasdsa");
+
+                        return Opacity(
+                            opacity: 1- animation.value,
+                            child: Transform.translate(offset: Offset(0,_sizeHelper.height*0.03-(animation.value*60)),child: child,));
+
+
+                      },
+                      child: Container(
+                        width: _sizeHelper.width*0.32,
+                        height: _sizeHelper.height*0.32 ,
+                        child: Image.asset("assets/logod.png"),
+                      ),
                     ),
                   ),
                   Positioned(
@@ -65,34 +100,71 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     child: Column(
                       children: [
-                        loginEntryField(
-                          isPass: false,
-                          textEditingController: _mailController,
-                          context: context,
-                          focusNode: _mailFocusNode,
+                        AnimatedBuilder(
+                          animation:animation,
+                          builder: (BuildContext context,Widget child){
+                            return Opacity(
+                                opacity: 1-animation.value,
+                                child: Transform.translate(offset: Offset(0,0-animation.value*60),child: child,));
+                          },
+                          child: loginEntryField(
+                            key: _keyMail,
+                            isPass: false,
+                            textEditingController: _mailController,
+                            context: context,
+                            focusNode: _mailFocusNode,
+                          ),
                         ),
                         SizedBox(height: 30,),
-                        loginEntryField(
-                          isPass: true,
-                          textEditingController: _passController,
-                          context: context,
-                          focusNode:_passFocusNode,
+                        AnimatedBuilder(
+                          animation: animation,
+                          builder: (BuildContext context,Widget child){
+                            return Opacity(
+                              opacity: 1-animation.value,
+                              child: Transform.translate(offset: Offset(0,0-animation.value*60),child: child,),
+                            );
+                          },
+                          child: loginEntryField(
+                            key: _keyPass,
+                            isPass: true,
+                            textEditingController: _passController,
+                            context: context,
+                            focusNode:_passFocusNode,
+                          ),
                         ),
                         SizedBox(height: 30,),
-                        submitButton(isLogin: true,height: _sizeHelper.height)
+                        AnimatedBuilder(
+                          animation: animation,
+                          builder: (BuildContext context,Widget child){
+                            return Opacity(
+                              opacity: 1-animation.value,
+                              child: Transform.translate(offset: Offset(0,0-animation.value*60),child: child,),
+                            );
+                          },
+                          child: submitButton(isLogin: true,height: _sizeHelper.height)
+                        ),
+
                       ],
                     ),),
                  Positioned(
                    bottom: 25,
                    child: Padding(
                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                     child: Container(
-                       width: _sizeHelper.width,
+                     child: GestureDetector(
+                       onTap: (){
+                         animationController.forward();
+                         animationController.addListener(() {
+                           debugPrint(animationController.value.toString());
+                         });
+                       },
+                       child: Container(
+                         width: _sizeHelper.width,
 
-                       child: Text(
-                         "Don't have an account? Come Join Us",
-                         textAlign: TextAlign.center,
-                         style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),
+                         child: Text(
+                           "Don't have an account? Come Join Us",
+                           textAlign: TextAlign.center,
+                           style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),
+                         ),
                        ),
                      ),
                    ),
@@ -105,5 +177,12 @@ class _LoginScreenState extends State<LoginScreen> {
         : Container(
             color: Colors.white,
           );
+  }
+
+
+  _getPositions() {
+    final RenderBox renderBoxRed = _keyMail.currentContext.findRenderObject();
+    final positionRed = renderBoxRed.localToGlobal(Offset.zero);
+    print("POSITION of Red: $positionRed ");
   }
 }
