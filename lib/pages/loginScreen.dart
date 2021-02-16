@@ -1,5 +1,6 @@
 import 'package:animated_login_screen/helpers/sizeHelper.dart';
 import 'package:animated_login_screen/widgets/myEntryField.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -74,6 +75,17 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               child: Stack(
                 alignment: AlignmentDirectional.center,
                 children: [
+                  Container(
+                    width: _sizeHelper.width,
+                    height: _sizeHelper.height,
+                    child: FlareActor(
+                      "assets/cloud.flr",
+                      fit: BoxFit.fill,
+                      animation: "paralax",
+
+
+                    ),
+                  ),
                   Positioned(
                     top: _sizeHelper.height*0.02+50,
                     child: AnimatedBuilder(
@@ -148,22 +160,28 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     ),),
                  Positioned(
                    bottom: 25,
-                   child: Padding(
-                     padding: const EdgeInsets.symmetric(horizontal: 20),
-                     child: GestureDetector(
-                       onTap: (){
-                         animationController.forward();
-                         animationController.addListener(() {
-                           debugPrint(animationController.value.toString());
-                         });
-                       },
-                       child: Container(
-                         width: _sizeHelper.width,
+                   child: AnimatedBuilder(
+                     animation: animation,
+                     builder: (BuildContext context,Widget child){
+                       return Transform.translate(offset: Offset(0,0),child: child,);
+                     },
+                     child: Padding(
+                       padding: const EdgeInsets.symmetric(horizontal: 20),
+                       child: GestureDetector(
+                         onTap: (){
+                           animationController.forward();
+                           animationController.addListener(() {
+                             debugPrint(animationController.value.toString());
+                           });
+                         },
+                         child: Container(
+                           width: _sizeHelper.width,
 
-                         child: Text(
-                           "Don't have an account? Come Join Us",
-                           textAlign: TextAlign.center,
-                           style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),
+                           child: Text(
+                             "Don't have an account? Come Join Us",
+                             textAlign: TextAlign.center,
+                             style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold),
+                           ),
                          ),
                        ),
                      ),
