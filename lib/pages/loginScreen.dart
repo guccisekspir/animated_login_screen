@@ -24,11 +24,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   GlobalKey _keyMail=GlobalKey();
   GlobalKey _keyPass=GlobalKey();
 
+  String animationName="paralax";
+
   @override
   void initState() {
-    animationController=AnimationController(vsync: this,duration: Duration(milliseconds: 300));
+    animationController=AnimationController(vsync: this,duration: Duration(milliseconds: 800));
     animation=CurvedAnimation(
-      curve: Curves.easeIn,
+      curve: Curves.ease,
       parent: animationController
     );
 
@@ -44,18 +46,18 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
       setState(() {
         isMounted = true;
       });
-      _afterLayout();
+      //_afterLayout();
     });
 
     super.initState();
   }
 
-  _afterLayout()async{
+  /*_afterLayout()async{
 
     Future.delayed(Duration(milliseconds: 4000)).then((value) => _getPositions());
 
 
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -75,15 +77,27 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
               child: Stack(
                 alignment: AlignmentDirectional.center,
                 children: [
-                  Container(
-                    width: _sizeHelper.width,
-                    height: _sizeHelper.height,
-                    child: FlareActor(
-                      "assets/cloud.flr",
-                      fit: BoxFit.fill,
-                      animation: "paralax",
+                  AnimatedBuilder(
+                    animation: animation,
+                    builder: (BuildContext context,Widget widget){
+                      return Opacity(
+                        opacity: 1-animation.value,
+                        child: widget,
+                      );
+                    },
+                    child: Opacity(
+                      opacity: 1-animation.value,
+                      child: Container(
+                        width: _sizeHelper.width,
+                        height: _sizeHelper.height,
+                        child: FlareActor(
+                          "assets/cloudy.flr",
+                          fit: BoxFit.fill,
+                          animation: animationName,
 
 
+                        ),
+                      ),
                     ),
                   ),
                   Positioned(
@@ -169,6 +183,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                        padding: const EdgeInsets.symmetric(horizontal: 20),
                        child: GestureDetector(
                          onTap: (){
+
                            animationController.forward();
                            animationController.addListener(() {
                              debugPrint(animationController.value.toString());
