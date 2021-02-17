@@ -35,11 +35,57 @@ class LoginSignScreens extends StatefulWidget {
 
 class _LoginSignScreensState extends State<LoginSignScreens> {
   bool isLogin=true;
+  Widget Loginn;
+  Widget Sign;
+  Widget myLoginScreen;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    Loginn= LoginScreen(isLogin: true,switchPage:()=> setState(() {
+      debugPrint("Geldi");
+
+      setState(() {
+        isLogin=false;
+        myLoginScreen=Sign;
+      });
+    }),);
+    if(isLogin)myLoginScreen=Loginn;
+    Sign= LoginScreen(isLogin: false,switchPage:()=> setState(() {
+      myLoginScreen=Loginn;
+      isLogin=true;
+    }),);
+    super.initState();
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
-    return  LoginScreen();
+
+
+    return  Scaffold(
+
+      body: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Theme.of(context).accentColor,
+                    Colors.deepPurple
+                  ]
+              )
+          ),
+        child: AnimatedSwitcher(
+          duration: Duration(milliseconds: 400),
+          child: isLogin?Loginn:Sign,
+        ),
+      ),
+    );
   }
+
 }
 
 

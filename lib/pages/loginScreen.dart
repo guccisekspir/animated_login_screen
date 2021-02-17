@@ -4,6 +4,9 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
+  final bool isLogin;
+  final VoidCallback switchPage;
+  const LoginScreen({Key key, this.isLogin,this.switchPage}) : super(key: key);
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -26,13 +29,26 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
   String animationName="paralax";
 
+
+  bool isLogin;
+
   @override
   void initState() {
+
+    setState(() {
+      isLogin=widget.isLogin;
+    });
+
+    debugPrint(isLogin.toString());
+
+
     animationController=AnimationController(vsync: this,duration: Duration(milliseconds: 800));
     animation=CurvedAnimation(
       curve: Curves.ease,
       parent: animationController
     );
+
+    if(!isLogin) animationController.forward();
 
     _mailController=TextEditingController(text: "");
     _passController=TextEditingController(text: "");
@@ -62,22 +78,11 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
   @override
   Widget build(BuildContext context) {
     return isMounted
-        ? Scaffold(
-            body: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    Theme.of(context).accentColor,
-                    Colors.deepPurple
-                  ]
-                )
-              ),
+        ? Container(
               child: Stack(
                 alignment: AlignmentDirectional.center,
                 children: [
-                  AnimatedBuilder(
+                  /*AnimatedBuilder(
                     animation: animation,
                     builder: (BuildContext context,Widget widget){
                       return Opacity(
@@ -99,9 +104,9 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         ),
                       ),
                     ),
-                  ),
+                  ),*/
                   Positioned(
-                    top: _sizeHelper.height*0.02+50,
+                    top: isLogin?_sizeHelper.height*0.02+30:_sizeHelper.height*0.02+30+60,
                     child: AnimatedBuilder(
 
                       animation: animation,
@@ -109,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                         debugPrint("sdasdasdsa");
 
                         return Opacity(
-                            opacity: 1- animation.value,
+                            opacity: isLogin?1-animation.value:animation.value,
                             child: Transform.translate(offset: Offset(0,_sizeHelper.height*0.03-(animation.value*60)),child: child,));
 
 
@@ -122,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                     ),
                   ),
                   Positioned(
-                    top: _sizeHelper.height*0.35,
+                    top: isLogin?_sizeHelper.height*0.35:_sizeHelper.height*0.35+60,
 
                     child: Column(
                       children: [
@@ -130,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           animation:animation,
                           builder: (BuildContext context,Widget child){
                             return Opacity(
-                                opacity: 1-animation.value,
+                                opacity: isLogin?1-animation.value:animation.value,
                                 child: Transform.translate(offset: Offset(0,0-animation.value*60),child: child,));
                           },
                           child: loginEntryField(
@@ -146,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           animation: animation,
                           builder: (BuildContext context,Widget child){
                             return Opacity(
-                              opacity: 1-animation.value,
+                              opacity: isLogin?1-animation.value:animation.value,
                               child: Transform.translate(offset: Offset(0,0-animation.value*60),child: child,),
                             );
                           },
@@ -163,7 +168,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                           animation: animation,
                           builder: (BuildContext context,Widget child){
                             return Opacity(
-                              opacity: 1-animation.value,
+                              opacity: isLogin?1-animation.value:animation.value,
                               child: Transform.translate(offset: Offset(0,0-animation.value*60),child: child,),
                             );
                           },
@@ -173,11 +178,13 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                       ],
                     ),),
                  Positioned(
-                   bottom: 25,
+                   bottom: isLogin?25:0,
                    child: AnimatedBuilder(
                      animation: animation,
                      builder: (BuildContext context,Widget child){
-                       return Transform.translate(offset: Offset(0,0),child: child,);
+                       return Opacity(
+                           opacity:1,
+                           child: Transform.translate(offset: Offset(0,0-animation.value*25),child: child,));
                      },
                      child: Padding(
                        padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -185,9 +192,7 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
                          onTap: (){
 
                            animationController.forward();
-                           animationController.addListener(() {
-                             debugPrint(animationController.value.toString());
-                           });
+                           widget.switchPage();
                          },
                          child: Container(
                            width: _sizeHelper.width,
@@ -205,8 +210,8 @@ class _LoginScreenState extends State<LoginScreen> with SingleTickerProviderStat
 
                 ],
               ),
-            ),
-          )
+            )
+
         : Container(
             color: Colors.white,
           );
