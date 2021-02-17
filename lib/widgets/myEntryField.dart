@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 
 Widget loginEntryField(
     {
-      GlobalKey key,
+
       bool isPass,
-      TextEditingController textEditingController,
       BuildContext context,
-      FocusNode focusNode}) {
+      }) {
   //hidden code kayıt mı login mi anlamak için
   return Container(
-    key: key,
+
     width: 300,
     child: TextFormField(
 
@@ -24,8 +23,7 @@ Widget loginEntryField(
               border: OutlineInputBorder(borderSide: BorderSide(color: Theme.of(context).primaryColor))
             ),
             style: TextStyle(color: Colors.pink),
-            focusNode: focusNode,
-            controller: textEditingController,
+
             keyboardType:
             isPass ? TextInputType.text : TextInputType.emailAddress,
             obscureText: isPass,

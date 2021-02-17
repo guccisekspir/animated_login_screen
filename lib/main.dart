@@ -1,6 +1,8 @@
+import 'package:animated_login_screen/blocs/pageSwitchBloc/page_switcher/page_switcher_bloc.dart';
 import 'package:animated_login_screen/helpers/sizeHelper.dart';
 import 'package:animated_login_screen/pages/loginScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
 
@@ -23,7 +25,9 @@ class MyApp extends StatelessWidget {
         
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LoginSignScreens()
+      home: BlocProvider(
+          create: (context)=>PageSwitcherBloc(),
+          child: LoginSignScreens())
     );
   }
 }
@@ -39,22 +43,15 @@ class _LoginSignScreensState extends State<LoginSignScreens> {
   Widget Sign;
   Widget myLoginScreen;
 
+  PageSwitcherBloc pageSwitcherBloc;
+
   @override
   void initState() {
+    pageSwitcherBloc= BlocProvider.of<PageSwitcherBloc>(context);
     // TODO: implement initState
-    Loginn= LoginScreen(isLogin: true,switchPage:()=> setState(() {
-      debugPrint("Geldi");
-
-      setState(() {
-        isLogin=false;
-        myLoginScreen=Sign;
-      });
-    }),);
+    Loginn= LoginScreen(isLogin: true,pageSwitcherBloc: pageSwitcherBloc,);
     if(isLogin)myLoginScreen=Loginn;
-    Sign= LoginScreen(isLogin: false,switchPage:()=> setState(() {
-      myLoginScreen=Loginn;
-      isLogin=true;
-    }),);
+    Sign= LoginScreen(isLogin: false,pageSwitcherBloc: pageSwitcherBloc,);
     super.initState();
   }
 
@@ -78,9 +75,21 @@ class _LoginSignScreensState extends State<LoginSignScreens> {
                   ]
               )
           ),
-        child: AnimatedSwitcher(
-          duration: Duration(milliseconds: 400),
-          child: isLogin?Loginn:Sign,
+        child: BlocListener(
+          cubit: pageSwitcherBloc,
+          listener: (BuildContext context,PageSwitcherState state){
+            if(state is PageLoginState){
+              debugPrint("Login");
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Loginn));
+
+              }
+            if(state is PageSignState){
+
+              debugPrint("Sign Listener");
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>LoginScreen(isLogin: false,pageSwitcherBloc: pageSwitcherBloc,)));
+              }
+          },
+          child: myLoginScreen,
         ),
       ),
     );
